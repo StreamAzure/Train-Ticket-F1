@@ -1600,7 +1600,7 @@ spec:
     spec:
       containers:
         - name: ts-verification-code-service
-          image: codewisdom/ts-verification-code-service:0.2.0
+          image: ts-verification-code-service-with-jaeger:NO_VER
           imagePullPolicy: Always
           env:
             - name: NODE_IP
