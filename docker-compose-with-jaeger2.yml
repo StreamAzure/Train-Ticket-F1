@@ -1,0 +1,530 @@
+networks:
+  trainticket-f1:
+    driver: bridge
+services:
+  cadvisor:
+    command: -logtostderr -docker_only -storage_driver=influxdb -storage_driver_db=cadvisor
+      -storage_driver_user=root -storage_driver_password=root  -storage_driver_host=influx:8086
+    depends_on:
+    - influx
+    deploy:
+      mode: global
+    hostname: '{{.Node.Hostname}}'
+    image: google/cadvisor
+    networks:
+    - trainticket-f1
+    ports:
+    - 8084:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+  elk:
+    image: sebp/elk:630
+    networks:
+    - trainticket-f1
+    ports:
+    - 5601:5601
+    - 9200:9200
+    - 5044:5044
+    - 9300:9300
+  grafana:
+    depends_on:
+    - influx
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+      replicas: 1
+    image: grafana/grafana
+    networks:
+    - trainticket-f1
+    ports:
+    - 3000:3000
+    volumes:
+    - grafana:/var/lib/grafana
+  influx:
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
+      replicas: 1
+    image: tutum/influxdb
+    networks:
+    - trainticket-f1
+    ports:
+    - 8083:8083
+    - 8086:8086
+    volumes:
+    - influx:/var/lib/influxdb
+  jaeger:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    image: jaegertracing/all-in-one:1.15
+    networks:
+    - trainticket-f1
+    ports:
+    - 17686:16686
+  redis:
+    image: redis
+    networks:
+    - trainticket-f1
+    ports:
+    - 6479:6379
+  ts-account-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-admin-basic-info-service:
+    build: ts-admin-basic-info-service
+    image: stream/ts-admin-basic-info-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18767:18767
+    restart: always
+  ts-admin-order-service:
+    build: ts-admin-order-service
+    image: stream/ts-admin-order-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16112:16112
+    restart: always
+  ts-admin-route-service:
+    build: ts-admin-route-service
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    image: stream/ts-admin-route-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16113:16113
+    restart: always
+  ts-admin-travel-service:
+    build: ts-admin-travel-service
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    image: stream/ts-admin-travel-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16114:16114
+    restart: always
+  ts-admin-user-service:
+    build: ts-admin-user-service
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    image: stream/ts-admin-user-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16115:16115
+    restart: always
+  ts-assurance-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-assurance-service:
+    build: ts-assurance-service
+    image: stream/ts-assurance-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18888:18888
+    restart: always
+  ts-auth-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-auth-service:
+    build: ts-auth-service
+    image: stream/ts-auth-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12340:12340
+    restart: always
+  ts-basic-service:
+    build: ts-basic-service
+    image: stream/ts-basic-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 15680:15680
+    restart: always
+  ts-cancel-service:
+    build: ts-cancel-service
+    image: stream/ts-cancel-service-with-jaeger:f1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18885:18885
+    restart: always
+  ts-config-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-config-service:
+    build: ts-config-service
+    image: stream/ts-config-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 15679:15679
+    restart: always
+  ts-consign-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-consign-price-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-consign-price-service:
+    build: ts-consign-price-service
+    image: stream/ts-consign-price-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16110:16110
+    restart: always
+  ts-consign-service:
+    build: ts-consign-service
+    image: stream/ts-consign-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16111:16111
+    restart: always
+  ts-contacts-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-contacts-service:
+    build: ts-contacts-service
+    image: stream/ts-contacts-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12347:12347
+    restart: always
+  ts-execute-service:
+    build: ts-execute-service
+    image: stream/ts-execute-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12386:12386
+    restart: always
+  ts-food-map-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-food-map-service:
+    build: ts-food-map-service
+    image: stream/ts-food-map-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18855:18855
+    restart: always
+  ts-food-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-food-service:
+    build: ts-food-service
+    image: stream/ts-food-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18856:18856
+    restart: always
+  ts-inside-payment-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-inside-payment-service:
+    build: ts-inside-payment-service
+    image: stream/ts-inside-payment-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18673:18673
+    restart: always
+  ts-news-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-news-service:
+    build: ts-news-service
+    image: stream/ts-news-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12862:12862
+    restart: always
+  ts-notification-service:
+    build: ts-notification-service
+    image: stream/ts-notification-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 17853:17853
+    restart: always
+  ts-order-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-order-other-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-order-other-service:
+    build: ts-order-other-service
+    image: stream/ts-order-other-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12032:12032
+    restart: always
+  ts-order-service:
+    build: ts-order-service
+    image: stream/ts-order-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12031:12031
+    restart: always
+  ts-payment-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-payment-service:
+    build: ts-payment-service
+    image: stream/ts-payment-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 19001:19001
+    restart: always
+  ts-preserve-other-service:
+    build: ts-preserve-other-service
+    image: stream/ts-preserve-other-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 14569:14569
+    restart: always
+  ts-preserve-service:
+    build: ts-preserve-service
+    image: stream/ts-preserve-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 14568:14568
+    restart: always
+  ts-price-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-price-service:
+    build: ts-price-service
+    image: stream/ts-price-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16579:16579
+    restart: always
+  ts-rebook-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-rebook-service:
+    build: ts-rebook-service
+    image: stream/ts-rebook-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18886:18886
+    restart: always
+  ts-route-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-route-plan-service:
+    build: ts-route-plan-service
+    image: stream/ts-route-plan-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 14578:14578
+    restart: always
+  ts-route-service:
+    build: ts-route-service
+    image: stream/ts-route-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 11178:11178
+    restart: always
+  ts-seat-service:
+    build: ts-seat-service
+    image: stream/ts-seat-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 18898:18898
+    restart: always
+  ts-security-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-security-service:
+    build: ts-security-service
+    image: stream/ts-security-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 11188:11188
+    restart: always
+  ts-station-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-station-service:
+    build: ts-station-service
+    image: stream/ts-station-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12345:12345
+    restart: always
+  ts-ticket-office-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-ticket-office-service:
+    build: ts-ticket-office-service
+    image: stream/ts-ticket-office-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16108:16108
+    restart: always
+  ts-ticketinfo-service:
+    build: ts-ticketinfo-service
+    image: stream/ts-ticketinfo-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 15681:15681
+    restart: always
+  ts-train-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-train-service:
+    build: ts-train-service
+    image: stream/ts-train-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 14567:14567
+    restart: always
+  ts-travel-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-travel-plan-service:
+    build: ts-travel-plan-service
+    image: stream/ts-travel-plan-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 14322:14322
+    restart: always
+  ts-travel-service:
+    build: ts-travel-service
+    image: stream/ts-travel-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12346:12346
+    restart: always
+  ts-travel2-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-travel2-service:
+    build: ts-travel2-service
+    image: stream/ts-travel2-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16346:16346
+    restart: always
+  ts-ui-dashboard:
+    build: ts-ui-dashboard
+    image: stream/ts-ui-dashboard-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 8080:8080
+    restart: always
+  ts-user-mongo:
+    image: mongo:3.4.3
+    networks:
+    - trainticket-f1
+  ts-user-service:
+    build: ts-user-service
+    image: stream/ts-user-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 12342:12342
+    restart: always
+  ts-verification-code-service:
+    build: ts-verification-code-service
+    image: ts-verification-code-service-with-jaeger:NO_VER
+    networks:
+    - trainticket-f1
+    ports:
+    - 15678:15678
+    restart: always
+  ts-voucher-mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    expose:
+    - '3306'
+    image: mysql
+    networks:
+    - trainticket-f1
+  ts-voucher-service:
+    build: ts-voucher-service
+    depends_on:
+    - ts-voucher-mysql
+    image: stream/ts-voucher-service-with-jaeger:v1
+    networks:
+    - trainticket-f1
+    ports:
+    - 16101:16101
+    restart: always
+    volumes:
+    - /var/lib/mysql
+version: '3'
+volumes:
+  grafana:
+    driver: local
+  influx:
+    driver: local

@@ -7,7 +7,7 @@ services:
   #      - 5672:5672
   #      - 15672:15672
   #    networks:
-  #      - trainticket-network
+  #      - trainticket-f1
 
   # kafka:
   #   container_name: kafka
@@ -16,55 +16,55 @@ services:
   #    - 2181:2181
   #    - 9092:9092
   #   networks:
-  #     - trainticket-network
+  #     - trainticket-f1
 
   #  zipkin:
   #    image: openzipkin/zipkin
   #    ports:
   #      - 9411:9411
   #    networks:
-  #      - trainticket-network
+  #      - trainticket-f1
 
   redis:
     image: redis
     ports:
       - 6479:6379
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-ui-dashboard:
-    image: codewisdom/ts-ui-dashboard-with-jaeger:v1
+    image: stream/ts-ui-dashboard-with-jaeger:v1
     restart: always
     ports:
       - 8080:8080
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-auth-service:
-    image: codewisdom/ts-auth-service-with-jaeger:v1
+    image: stream/ts-auth-service-with-jaeger:v1
     restart: always
     ports:
       - 12340:12340
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-auth-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-user-service:
-    image: codewisdom/ts-user-service-with-jaeger:v1
+    image: stream/ts-user-service-with-jaeger:v1
     restart: always
     ports:
       - 12342:12342
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-user-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-verification-code-service:
     image: ts-verification-code-service-with-jaeger:NO_VER
@@ -72,305 +72,305 @@ services:
     ports:
       - 15678:15678
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-account-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-route-service:
-    image: codewisdom/ts-route-service-with-jaeger:v1
+    image: stream/ts-route-service-with-jaeger:v1
     restart: always
     ports:
       - 11178:11178
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-route-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-contacts-service:
-    image: codewisdom/ts-contacts-service-with-jaeger:v1
+    image: stream/ts-contacts-service-with-jaeger:v1
     restart: always
     ports:
       - 12347:12347
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-contacts-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-order-service:
-    image: codewisdom/ts-order-service-with-jaeger:v1
+    image: stream/ts-order-service-with-jaeger:v1
     restart: always
     ports:
       - 12031:12031
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-order-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-order-other-service:
-    image: codewisdom/ts-order-other-service-with-jaeger:v1
+    image: stream/ts-order-other-service-with-jaeger:v1
     restart: always
     ports:
       - 12032:12032
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-order-other-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-config-service:
-    image: codewisdom/ts-config-service-with-jaeger:v1
+    image: stream/ts-config-service-with-jaeger:v1
     restart: always
     ports:
       - 15679:15679
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-config-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-station-service:
-    image: codewisdom/ts-station-service-with-jaeger:v1
+    image: stream/ts-station-service-with-jaeger:v1
     restart: always
     ports:
       - 12345:12345
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-station-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-train-service:
-    image: codewisdom/ts-train-service-with-jaeger:v1
+    image: stream/ts-train-service-with-jaeger:v1
     restart: always
     ports:
       - 14567:14567
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-train-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-travel-service:
-    image: codewisdom/ts-travel-service-with-jaeger:v1
+    image: stream/ts-travel-service-with-jaeger:v1
     restart: always
     ports:
       - 12346:12346
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-travel-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-travel2-service:
-    image: codewisdom/ts-travel2-service-with-jaeger:v1
+    image: stream/ts-travel2-service-with-jaeger:v1
     restart: always
     ports:
       - 16346:16346
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-travel2-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-preserve-service:
-    image: codewisdom/ts-preserve-service-with-jaeger:v1
+    image: stream/ts-preserve-service-with-jaeger:v1
     restart: always
     ports:
       - 14568:14568
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-preserve-other-service:
-    image: codewisdom/ts-preserve-other-service-with-jaeger:v1
+    image: stream/ts-preserve-other-service-with-jaeger:v1
     restart: always
     ports:
       - 14569:14569
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-basic-service:
-    image: codewisdom/ts-basic-service-with-jaeger:v1
+    image: stream/ts-basic-service-with-jaeger:v1
     restart: always
     ports:
       - 15680:15680
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-ticketinfo-service:
-    image: codewisdom/ts-ticketinfo-service-with-jaeger:v1
+    image: stream/ts-ticketinfo-service-with-jaeger:v1
     restart: always
     ports:
       - 15681:15681
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-price-service:
-    image: codewisdom/ts-price-service-with-jaeger:v1
+    image: stream/ts-price-service-with-jaeger:v1
     restart: always
     ports:
       - 16579:16579
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-price-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-notification-service:
-    image: codewisdom/ts-notification-service-with-jaeger:v1
+    image: stream/ts-notification-service-with-jaeger:v1
     restart: always
     ports:
       - 17853:17853
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-security-service:
-    image: codewisdom/ts-security-service-with-jaeger:v1
+    image: stream/ts-security-service-with-jaeger:v1
     restart: always
     ports:
       - 11188:11188
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-security-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-inside-payment-service:
-    image: codewisdom/ts-inside-payment-service-with-jaeger:v1
+    image: stream/ts-inside-payment-service-with-jaeger:v1
     restart: always
     ports:
       - 18673:18673
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-inside-payment-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-execute-service:
-    image: codewisdom/ts-execute-service-with-jaeger:v1
+    image: stream/ts-execute-service-with-jaeger:v1
     restart: always
     ports:
       - 12386:12386
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-payment-service:
-    image: codewisdom/ts-payment-service-with-jaeger:v1
+    image: stream/ts-payment-service-with-jaeger:v1
     restart: always
     ports:
       - 19001:19001
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-payment-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-rebook-service:
-    image: codewisdom/ts-rebook-service-with-jaeger:v1
+    image: stream/ts-rebook-service-with-jaeger:v1
     restart: always
     ports:
       - 18886:18886
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-rebook-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-cancel-service:
-    image: codewisdom/ts-cancel-service-with-jaeger:v1
+    image: stream/ts-cancel-service-with-jaeger:f1
     restart: always
     ports:
       - 18885:18885
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-assurance-service:
-    image: codewisdom/ts-assurance-service-with-jaeger:v1
+    image: stream/ts-assurance-service-with-jaeger:v1
     restart: always
     ports:
       - 18888:18888
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-assurance-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-seat-service:
-    image: codewisdom/ts-seat-service-with-jaeger:v1
+    image: stream/ts-seat-service-with-jaeger:v1
     restart: always
     ports:
       - 18898:18898
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-travel-plan-service:
-    image: codewisdom/ts-travel-plan-service-with-jaeger:v1
+    image: stream/ts-travel-plan-service-with-jaeger:v1
     restart: always
     ports:
       - 14322:14322
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-ticket-office-service:
-    image: codewisdom/ts-ticket-office-service-with-jaeger:v1
+    image: stream/ts-ticket-office-service-with-jaeger:v1
     restart: always
     ports:
       - 16108:16108
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-ticket-office-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-news-service:
-    image: codewisdom/ts-news-service-with-jaeger:v1
+    image: stream/ts-news-service-with-jaeger:v1
     restart: always
     ports:
       - 12862:12862
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-news-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-voucher-mysql:
     image: mysql
@@ -379,10 +379,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-voucher-service:
-    image: codewisdom/ts-voucher-service-with-jaeger:v1
+    image: stream/ts-voucher-service-with-jaeger:v1
     restart: always
     ports:
       - 16101:16101
@@ -391,86 +391,86 @@ services:
     volumes:
       - /var/lib/mysql
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-food-map-service:
-    image: codewisdom/ts-food-map-service-with-jaeger:v1
+    image: stream/ts-food-map-service-with-jaeger:v1
     restart: always
     ports:
       - 18855:18855
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-food-map-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-route-plan-service:
-    image: codewisdom/ts-route-plan-service-with-jaeger:v1
+    image: stream/ts-route-plan-service-with-jaeger:v1
     restart: always
     ports:
       - 14578:14578
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-food-service:
-    image: codewisdom/ts-food-service-with-jaeger:v1
+    image: stream/ts-food-service-with-jaeger:v1
     restart: always
     ports:
       - 18856:18856
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-consign-service:
-    image: codewisdom/ts-consign-service-with-jaeger:v1
+    image: stream/ts-consign-service-with-jaeger:v1
     restart: always
     ports:
       - 16111:16111
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-consign-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-consign-price-service:
-    image: codewisdom/ts-consign-price-service-with-jaeger:v1
+    image: stream/ts-consign-price-service-with-jaeger:v1
     restart: always
     ports:
       - 16110:16110
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-consign-price-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-food-mongo:
     image: mongo:3.4.3
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-admin-basic-info-service:
-    image: codewisdom/ts-admin-basic-info-service-with-jaeger:v1
+    image: stream/ts-admin-basic-info-service-with-jaeger:v1
     restart: always
     ports:
       - 18767:18767
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-admin-order-service:
-    image: codewisdom/ts-admin-order-service-with-jaeger:v1
+    image: stream/ts-admin-order-service-with-jaeger:v1
     restart: always
     ports:
       - 16112:16112
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-admin-route-service:
-    image: codewisdom/ts-admin-route-service-with-jaeger:v1
+    image: stream/ts-admin-route-service-with-jaeger:v1
     restart: always
     ports:
       - 16113:16113
@@ -479,10 +479,10 @@ services:
       restart_policy:
         condition: on-failure
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-admin-travel-service:
-    image: codewisdom/ts-admin-travel-service-with-jaeger:v1
+    image: stream/ts-admin-travel-service-with-jaeger:v1
     restart: always
     ports:
       - 16114:16114
@@ -491,10 +491,10 @@ services:
       restart_policy:
         condition: on-failure
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   ts-admin-user-service:
-    image: codewisdom/ts-admin-user-service-with-jaeger:v1
+    image: stream/ts-admin-user-service-with-jaeger:v1
     restart: always
     ports:
       - 16115:16115
@@ -503,7 +503,7 @@ services:
       restart_policy:
         condition: on-failure
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   jaeger:
     image: jaegertracing/all-in-one:1.15
@@ -514,7 +514,7 @@ services:
       restart_policy:
         condition: on-failure
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   influx:
     image: tutum/influxdb
@@ -529,7 +529,7 @@ services:
         constraints:
           - node.role == manager
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   cadvisor:
     image: google/cadvisor
@@ -547,7 +547,7 @@ services:
     deploy:
       mode: global
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   grafana:
     image: grafana/grafana
@@ -563,7 +563,7 @@ services:
         constraints:
           - node.role == manager
     networks:
-      - trainticket-network
+      - trainticket-f1
 
   elk:
     image: sebp/elk:630
@@ -573,7 +573,7 @@ services:
       - 5044:5044 # Logstash Beats interface
       - 9300:9300 # Elasticsearch's transport interface
     networks:
-      - trainticket-network
+      - trainticket-f1
   # pilot:
   #   image: registry.cn-hangzhou.aliyuncs.com/acs-sample/log-pilot:latest
   #   volumes:
@@ -585,10 +585,10 @@ services:
   #     ELASTICSEARCH_HOST: elk #按照您的需要替换
   #     ELASTICSEARCH_PORT: 9200
   #   networks:
-  #     - trainticket-network
+  #     - trainticket-f1
 
 networks:
-  trainticket-network:
+  trainticket-f1:
     # driver: overlay
     driver: bridge
 
