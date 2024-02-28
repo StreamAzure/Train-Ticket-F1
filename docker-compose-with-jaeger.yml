@@ -164,7 +164,7 @@ services:
     restart: always
   ts-cancel-service:
     build: ts-cancel-service
-    image: stream/ts-cancel-service-with-jaeger:f1
+    image: stream/ts-cancel-service-with-jaeger:v1
     networks:
     - trainticket-f1
     ports:

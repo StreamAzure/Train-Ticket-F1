@@ -1,13 +1,14 @@
 import os
 
-PREFIX = "codewisdom"
-VERSION = "0.2.0"
+PREFIX = "stream"
+VERSION = "v1"
 
 base_path = os.getcwd()
 build_paths = []
 
 
 def main():
+    print("mvn building ...")
     if not mvn_build():
         print("mvn build failed")
     init_docker_build_paths()
@@ -41,7 +42,8 @@ def docker_login():
 
 def docker_build_and_push():
     for build_path in build_paths:
-        image_name = build_path.split("/")[-1]
+        image_name = build_path.split("/")[-1] + "-with-jaeger"
+        print(f'building {image_name}...')
 
         os.chdir(build_path)
         files = os.listdir(build_path)
@@ -52,11 +54,11 @@ def docker_build_and_push():
             else:
                 print("[SUCCESS]" + image_name + " build success.")
 
-            docker_push = os.system(f"sudo docker push {PREFIX}/{image_name}:{VERSION}")
-            if docker_push != 0:
-                print("[FAIL]" + image_name + " push failed.")
-            else:
-                print("[SUCCESS]" + image_name + " push success.")
+            # docker_push = os.system(f"sudo docker push {PREFIX}/{image_name}:{VERSION}")
+            # if docker_push != 0:
+            #     print("[FAIL]" + image_name + " push failed.")
+            # else:
+            #     print("[SUCCESS]" + image_name + " push success.")
 
 
 if __name__ == '__main__':
