@@ -14,3 +14,5 @@ opentracing:
     udp-sender:
       host: jaeger
       port: 6831
+    const-sampler:
+      decision: true # 固定采样，全部上报
