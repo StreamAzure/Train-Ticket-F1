@@ -1,6 +1,6 @@
 import logging
 from queries import Query
-from scenarios import query_and_preserve
+from scenarios import *
 import time
 
 url = 'http://localhost:8080'
@@ -8,17 +8,15 @@ url = 'http://localhost:8080'
 # login train-ticket and store the cookies
 q = Query(url)
 if not q.login():
-    logging.fatal('login failed')
+    print('login failed')
     exit(1)
 
-logging.info('login successfully')
+print('login successfully')
 
 # execute scenario on current user
 # query_and_preserve(q)
-while(True):
-    time.sleep(1)
-    print("q.query_normal_ticket()")
-    q.query_normal_ticket()
+query_and_preserve(q)
+query_and_cancel(q)
 
 # or execute query directly
 # q.query_high_speed_ticket()
