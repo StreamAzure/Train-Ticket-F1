@@ -40,6 +40,7 @@ public class CancelServiceImpl implements CancelService {
     public Response cancelOrder(String orderId, String loginId, HttpHeaders headers) {
 
         Response<Order> orderResult = getOrderByIdFromOrder(orderId, headers);
+        // stream: 1.GET other-service
         if (orderResult.getStatus() == 1) {
             CancelServiceImpl.LOGGER.info("[Cancel Order] Order found G|H");
             Order order =  orderResult.getData();
@@ -94,7 +95,7 @@ public class CancelServiceImpl implements CancelService {
                 return new Response<>(0, orderStatusCancelNotPermitted, null);
             }
         } else {
-
+            // stream: 2.GET order-other-service
             Response<Order> orderOtherResult = getOrderByIdFromOrderOther(orderId, headers);
             if (orderOtherResult.getStatus() == 1) {
                 CancelServiceImpl.LOGGER.info("[Cancel Order] Order found Z|K|Other");
@@ -109,10 +110,16 @@ public class CancelServiceImpl implements CancelService {
                 //     Response changeOrderResult = cancelFromOtherOrder(order, headers);
                 /*********************** Fault Reproduction - Error Process Seq *************************/
                     //1.return money
+                    // stream: 内有延时5s
+                    // stream: 3.GET order-other-service
+                    // stream: PUT order-other-service, 修改订单状态为 canceling
+                    // stream: GET inside-payment-service
+
                     String money = calculateRefund(order);
                     Future<Boolean> taskDrawBackMoney = asyncTask.drawBackMoneyForOrderCancel(headers, money,loginId,order.getId().toString());
 
                     //2.change status to [canceled]
+                    // stream: 4.PUT order-other-service, 修改订单状态为 canceled
                     Future<Response> taskCancelOrder = asyncTask.updateOtherOrderStatusToCancel(order, headers);
 
                     while(!taskCancelOrder.isDone() || !taskDrawBackMoney.isDone()) {
@@ -136,7 +143,7 @@ public class CancelServiceImpl implements CancelService {
                         throw new RuntimeException(e);
                     }
                     System.out.println("[Cancel Order Service][Cancel Order] Two Process Done");
-
+                    // stream: 5.GET order-other-service, 验证故障结果
                     Response<Order> re = getOrderByIdFromOrderOther(orderId, headers);
                     Order newOrder = re.getData();
                     boolean status;
