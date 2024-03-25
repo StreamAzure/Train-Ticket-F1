@@ -3,7 +3,7 @@
 已做的修改：
 - ts-verification-code-service 替换为 jaeger-ty-no-veri-code 分支的同名目录，固定每次的验证码都为AAAA
 - deployment/docker-compose-manifests/docker-compose-with-jaeger.yaml 中的 image: mongo 全部替换为 image: mongo:3.4.3
-- 所有的 dockerfile 中的 From java:8-jre 替换为 From openjdk:8-jre 
+- 所有的 dockerfile 中的 From java:8-jre 替换为 FROM openjdk:8-jre 
 
 ---
 以下构建为 with-jaeger 版本
